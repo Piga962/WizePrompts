@@ -8,7 +8,7 @@ const Register = () => {
     return (
         <div className="Register-container">
             <div className="Heading">
-                <button className="Home-button" onClick={() => navigate("/Login")}>
+                <button className="Home-button" onClick={() => navigate("/")}>
                     <img src={logo} alt="logo"/>
                 </button>
                 <h1>Register</h1>
@@ -36,7 +36,7 @@ const Register = () => {
                 </label>
             </div>
 
-            <button className="Register-button" onClick={() => navigate("/Login")}>Register</button>
+            <button className="Register-button" onClick={() => navigate("/Login")}>Create account</button>
         </div>
     );
 };
