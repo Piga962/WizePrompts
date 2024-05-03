@@ -7,13 +7,13 @@ const Register = () => {
     
     return (
         <div className="Register-container">
-            <div className="Heading">
+            <div className="Register-Heading">
                 <button className="Home-button" onClick={() => navigate("/")}>
                     <img src={logo} alt="logo"/>
                 </button>
                 <h1>Register</h1>
             </div>
-            <div className="Inputs">
+            <div className="Register-Inputs">
                 <label className="input">
                     <h2>Name</h2>
                     <input className="input-text" type="text" name="name" placeholder="Name"/>

@@ -7,13 +7,14 @@ const Login = () => {
     
     return (
         <div className="Login-container">
-            <div className="Heading">
+            <div className="Login-Heading">
                 <button className="Home-button" onClick={() => navigate("/")}>
                     <img src={logo} alt="logo"/>
                 </button>
-                <h1>Sign In</h1>
+                <h1>WizePrompt</h1>
             </div>
-            <div className="Inputs">
+            <div className="Login-Inputs">
+                <h1>Sign In</h1>
                 <label className="input">
                     <h2>Email</h2>
                     <input className="input-text" type="email" name="email" placeholder="Email"/>

@@ -1,4 +1,4 @@
-.Heading {
+.Register-Heading {
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -11,7 +11,8 @@
     cursor: pointer;
 }
 
-.Heading h1{
+.Register-Heading h1{
+    margin: auto;
     font-size: 2rem;
     color: white;
 }

@@ -1,18 +1,29 @@
-.Heading {
+.Login-Heading {
     display: flex;
     justify-content: space-around;
     align-items: center;
+    flex-direction: column;
 }
 
 .Home-button{
-    border-radius: 15px;
+    border-radius: 100%;
     border: none;
     background-color: transparent;
     cursor: pointer;
 }
 
-.Heading h1{
+.Login-Heading h1{
+    margin: auto;
     font-size: 2rem;
+    color: white;
+}
+
+.Login-Inputs{
+    margin-top: 5rem;
+}
+
+.Login-Inputs h1{
+    font-size: 1.5rem;
     color: white;
 }
 
