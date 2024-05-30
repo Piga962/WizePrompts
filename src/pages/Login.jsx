@@ -27,6 +27,11 @@ const Login = () => {
             <div className="Button-container">
                 <button className="Login-button" onClick={() => navigate("/")}>Sign In</button>
             </div>
+            <div className = "create-acount">
+                <p>
+                    Don't have an account? Create one <span className="highlight" onClick={() => navigate("/register")}>here</span>.
+                </p>
+            </div>
         </div>
     );
 };

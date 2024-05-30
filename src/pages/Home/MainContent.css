@@ -1,0 +1,69 @@
+/* MainContent.css */
+.MainContent {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+.Messages {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column-reverse; /* Newest messages at the top */
+}
+
+.Message {
+    margin-bottom: 20px;
+}
+
+.UserMessage, .ResponseMessage {
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.UserMessage {
+    background-color: #e0f7fa;
+}
+
+.ResponseMessage {
+    background-color: #fff3e0;
+}
+
+.PromptForm {
+    display: flex;
+    flex-direction: column;
+}
+
+.PromptForm textarea {
+    margin-bottom: 10px;
+    padding: 10px;
+    font-size: 16px;
+    width: 100%;
+    height: 100px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.PromptForm select, .PromptForm input[type="text"], .PromptForm input[type="file"], .PromptForm button {
+    margin-bottom: 10px;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.PromptForm button {
+    background-color: #4caf50;
+    color: white;
+    cursor: pointer;
+}
+
+.PromptForm button:hover {
+    background-color: #45a049;
+}

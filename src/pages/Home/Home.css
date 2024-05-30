@@ -1,0 +1,10 @@
+.Home {
+    display: flex;
+    height: 100vh;
+}
+
+button {
+    padding: 10px 20px;
+    margin: 10px;
+    cursor: pointer;
+}

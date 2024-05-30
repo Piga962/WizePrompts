@@ -1,23 +1,12 @@
-/* General body and html styling for full height and centering */
-body, html {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: Arial, sans-serif;
-    background-color: #282c34; /* Dark background for contrast */
-    color: white; /* Default text color */
-}
-
-/* Main container for the login form */
-.Login-container {
+/* Main container for the register form */
+.Register-container {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center; /* Center content vertically */
     width: 100%;
     max-width: 400px;
+    height: 100%; /* Ensure it takes the full height */
     padding: 2rem;
     box-sizing: border-box;
     background-color: #3a3f47; /* Slightly lighter background for the form */
@@ -25,8 +14,8 @@ body, html {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Styling for the header section of the login form */
-.Login-Heading {
+/* Styling for the header section of the register form */
+.Register-Heading {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -42,18 +31,18 @@ body, html {
     margin-bottom: 1rem;
 }
 
-.Login-Heading h1 {
+.Register-Heading h1 {
     margin: 0;
     font-size: 2rem;
     color: white;
 }
 
-/* Styling for the input section of the login form */
-.Login-Inputs {
+/* Styling for the input section of the register form */
+.Register-Inputs {
     width: 100%;
 }
 
-.Login-Inputs h1 {
+.Register-Inputs h2 {
     font-size: 1.5rem;
     color: white;
     text-align: center;
@@ -80,15 +69,24 @@ body, html {
     box-sizing: border-box;
 }
 
-/* Styling for the button container */
-.Button-container {
-    margin-top: 2rem;
-    width: 100%;
+.checkbox {
     display: flex;
-    justify-content: center;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 2rem; /* Reduced margin-bottom to fit better */
+    margin-top: 1rem; /* Reduced margin-top to fit better */
 }
 
-.Login-button {
+.input-checkbox {
+    margin-right: 0.5rem;
+}
+
+span {
+    font-size: 0.8rem;
+    color: white;
+}
+
+.Register-button {
     width: 100%;
     padding: 0.5rem;
     border-radius: 15px;
@@ -100,22 +98,6 @@ body, html {
     text-align: center;
 }
 
-.Login-button:hover {
+.Register-button:hover {
     background-color: #d42e34; /* Slightly darker shade on hover */
-}
-
-/* Styling for the create-account text */
-.create-account {
-    margin-top: 1rem;
-    text-align: center;
-}
-
-.create-account p {
-    color: white;
-}
-
-.highlight {
-    color: red;
-    text-decoration: underline;
-    cursor: pointer;
 }

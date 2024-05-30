@@ -1,0 +1,29 @@
+.Sidebar {
+    width: 250px;
+    background-color: #f0f0f0;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
+
+.User {
+    margin-bottom: 20px;
+}
+
+.User h3 {
+    margin: 0;
+    padding: 0;
+}
+
+.Conversations h4 {
+    margin-top: 0;
+}
+
+.Conversations ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.Conversations li {
+    margin: 5px 0;
+    cursor: pointer;
+}
