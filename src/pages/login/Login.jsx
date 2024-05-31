@@ -1,7 +1,8 @@
-import "./Register.css";
-import Form from './components/Form';
+import { useNavigate } from "react-router-dom";
+import "./Login.css";
+import Form from "./components/Form";
 
-const Register = () => {
+const Login = () => {
     
     return (
         <div style = {{display: 'flex', justifyContent: 'center'}}>
@@ -10,7 +11,6 @@ const Register = () => {
             </div>
         </div>
     )
-
 };
 
-export default Register;
+export default Login;

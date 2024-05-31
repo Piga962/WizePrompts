@@ -7,9 +7,8 @@ import OpenAI from "openai";
 
 const openai = new OpenAI({ apiKey: "sk-proj-RkaxSDCw5kJtbE6CLzvtT3BlbkFJFgVeMajFe48754K1Oy4N", dangerouslyAllowBrowser: true });
 
-const Home = () => {
+const Home = ({username}) => {
     const navigate = useNavigate();
-    const [username, setUsername] = useState('John Doe');
     const [conversations, setConversations] = useState([]);
     const [categories, setCategories] = useState([]);
     const [messages, setMessages] = useState([]);
