@@ -1,29 +1,71 @@
-.Sidebar {
+/* Sidebar.css */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 250px;
-    background-color: #f0f0f0;
+    height: 100%;
+    background-color: #333;
+    color: white;
+    transition: transform 0.3s ease;
+    transform: translateX(-100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     padding: 20px;
-    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
 }
 
-.User {
-    margin-bottom: 20px;
+.sidebar.open {
+    transform: translateX(0);
 }
 
-.User h3 {
-    margin: 0;
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+}
+
+.sidebar-content {
+    margin-top: 20px;
+}
+
+.sidebar-content ul {
+    list-style: none;
     padding: 0;
 }
 
-.Conversations h4 {
-    margin-top: 0;
-}
-
-.Conversations ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-.Conversations li {
-    margin: 5px 0;
+.sidebar-content ul li {
+    padding: 10px;
     cursor: pointer;
+}
+
+.sidebar-content ul li:hover {
+    background-color: #444;
+}
+
+.logout-button {
+    margin-top: 20px;
+    background-color: #e93d44;
+    border: none;
+    color: white;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.toggle-button {
+    position: absolute;
+    top: 20px;
+    right: -30px; /* Position it outside the sidebar */
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 20px;
+    transition: right 0.3s ease;
+}
+
+.toggle-button.open {
+    right: -50px; /* Adjust this value if necessary */
 }

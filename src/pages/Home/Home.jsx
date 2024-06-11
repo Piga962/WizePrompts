@@ -1,40 +1,31 @@
 import { useNavigate } from "react-router-dom";
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Sidebar from './Sidebar';
 import MainContent from './MainContent';
-import "./Home.css";
+import './Home.css';
 import OpenAI from "openai";
 
 const openai = new OpenAI({ apiKey: "sk-proj-RkaxSDCw5kJtbE6CLzvtT3BlbkFJFgVeMajFe48754K1Oy4N", dangerouslyAllowBrowser: true });
 
-const Home = ({username}) => {
+const Home = ({ user, setUser }) => {
+
     const navigate = useNavigate();
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [conversations, setConversations] = useState([]);
+    const [conversation, setConversation] = useState({
+        user_id: user.id,
+        title: '',
+        category_id: '',
+    });
+
     const [categories, setCategories] = useState([]);
     const [messages, setMessages] = useState([]);
 
-    useEffect(() => {
-        // Fetch conversations and categories from the server
-        // Example:
-        // fetch('/api/conversations')
-        //     .then(response => response.json())
-        //     .then(data => setConversations(data));
-        // fetch('/api/categories')
-        //     .then(response => response.json())
-        //     .then(data => setCategories(data));
-    }, []);
-
-    const handleLogout = () => {
-        // Handle logout logic here
-        navigate('/login');
-    };
-
-    const handleConversationSelect = (conversationId) => {
-        // Handle conversation selection logic here
+    const toggleSidebar = () => {
+        setIsSidebarOpen(!isSidebarOpen);
     };
 
     const handlePromptSubmit = async ({ prompt, selectedCategory, newCategory, file }) => {
-        // Call OpenAI API
         const stream = await openai.chat.completions.create({
             model: "gpt-3.5-turbo-16k",
             messages: [
@@ -56,17 +47,17 @@ const Home = ({username}) => {
 
     return (
         <div className="Home">
-            <Sidebar 
-                username={username} 
-                conversations={conversations} 
-                onConversationSelect={handleConversationSelect} 
-                onLogout={handleLogout}
+            <Sidebar
+                user={user}
+                setUser={setUser}
+                isOpen={isSidebarOpen}
+                toggleSidebar={toggleSidebar}
             />
-            <MainContent 
-                onPromptSubmit={handlePromptSubmit} 
-                categories={categories} 
-                onCategoryCreate={(category) => setCategories([...categories, category])}
+            <MainContent
+                onPromptSubmit={handlePromptSubmit}
+                categories={categories}
                 messages={messages}
+                isSidebarOpen={isSidebarOpen}
             />
         </div>
     );

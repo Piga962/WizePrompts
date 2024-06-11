@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './MainContent.css';
+import FileInput from './FileInput';
 
 const MainContent = ({ onPromptSubmit, categories, onCategoryCreate, messages }) => {
     const [prompt, setPrompt] = useState('');
@@ -14,7 +15,7 @@ const MainContent = ({ onPromptSubmit, categories, onCategoryCreate, messages })
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        return onPromptSubmit({ prompt, selectedCategory, newCategory, file });
+        await onPromptSubmit({ prompt, selectedCategory, newCategory, file });
         setPrompt(''); // Clear the prompt after submission
     };
 
@@ -29,16 +30,24 @@ const MainContent = ({ onPromptSubmit, categories, onCategoryCreate, messages })
                 ))}
             </div>
             <form onSubmit={handleSubmit} className="PromptForm">
-                <textarea value={prompt} onChange={handlePromptChange} placeholder="Enter your prompt" required />
-                <select value={selectedCategory} onChange={handleCategoryChange}>
-                    <option value="">Select a category</option>
-                    {categories.map((category) => (
-                        <option key={category.id} value={category.name}>{category.name}</option>
-                    ))}
-                </select>
-                <input type="text" value={newCategory} onChange={handleNewCategoryChange} placeholder="Or create a new category" />
-                <input type="file" onChange={handleFileChange} />
-                <button type="submit">Submit</button>
+                <div className="form-buttons-left">
+                    <FileInput />
+                    <select value={selectedCategory} onChange={handleCategoryChange} className="category-select">
+                        <option value="">Categories</option>
+                        {categories.map((category) => (
+                            <option key={category.id} value={category.name}>{category.name}</option>
+                        ))}
+                    </select>
+                    <input type="text" value = {newCategory} onChange={handleNewCategoryChange} placeholder="Create a new category"></input>
+                </div>
+                <textarea 
+                    value={prompt} 
+                    onChange={handlePromptChange} 
+                    placeholder="Enter your prompt" 
+                    required 
+                    className="prompt-textarea" 
+                />
+                <button type="submit" className="submit-button"/>
             </form>
         </div>
     );

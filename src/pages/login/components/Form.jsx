@@ -2,7 +2,7 @@ import {useState} from "react";
 import { useNavigate } from "react-router-dom";
 import logo from '../../../images/wizeline-sin-fondo.png';
 
-const Form = () =>{
+const Form = ({setUser}) =>{
     const navigate = useNavigate();
 
     const [form, setForm] = useState({
@@ -24,11 +24,12 @@ const Form = () =>{
         try{
             const res = await fetch("http://localhost:3001/users/login",{method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(form),
         });
+        const data = await res.json();
         if(res.status === 200){
-            alert("User logged in");
+            setUser(data.user);
             navigate("/");
         } else{
-            alert("Error at login");
+            alert("Error at login1"+ data.message);
         }
         } catch(error){
             alert("Error at login");

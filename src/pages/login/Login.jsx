@@ -2,12 +2,11 @@ import { useNavigate } from "react-router-dom";
 import "./Login.css";
 import Form from "./components/Form";
 
-const Login = () => {
-    
+const Login = ({setUser}) => {
     return (
         <div style = {{display: 'flex', justifyContent: 'center'}}>
             <div>
-                <Form />
+                <Form setUser={setUser}/>
             </div>
         </div>
     )
