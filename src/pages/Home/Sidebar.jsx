@@ -3,17 +3,16 @@ import React, { useEffect, useState } from 'react';
 import './Sidebar.css';
 import Conversations from './components/Conversations';
 
-const Sidebar = ({ user, setUser, isOpen, toggleSidebar}) => {
+const Sidebar = ({ user, setUser, isOpen, toggleSidebar, onConversationSelect}) => {
 
     const navigate = useNavigate();
     const [showForm, setShowForm] = useState(false);
-    const [conversations, setConversations] = useState([]);
-
     const [conversation, setConversation] = useState({
         user_id: user.id,
         title: '',
         category_id: '',
     });
+    const [conversations, setConversations] = useState([]);
 
     const handleConversationChange = (e) => {
         const {name, value} = e.target;
@@ -75,7 +74,7 @@ const Sidebar = ({ user, setUser, isOpen, toggleSidebar}) => {
 
             {isOpen && (
                 <div className="sidebar-content">
-                    <Conversations conversations={conversations} />
+                    <Conversations conversations={conversations} onConversationSelect={onConversationSelect}/>
 
                     <button onClick={() => setShowForm(true)} className="create-button">Create New Conversation</button>
 
