@@ -30,6 +30,24 @@
     margin: 0;
 }
 
+.sidebar-content {
+    margin-top: 20px;
+}
+
+.sidebar-content ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar-content ul li {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.sidebar-content ul li:hover {
+    background-color: #444;
+}
+
 .logout-button, .create-button, .cancel-button {
     margin-top: 20px;
     background-color: #e93d44;
@@ -38,15 +56,22 @@
     padding: 10px;
     cursor: pointer;
     border-radius: 5px;
-    width: 100%;
+    width: 80%;
 }
 
 .logout-button:hover, .create-button:hover, .cancel-button:hover {
     background-color: #de181f;
 }
 
-.create-button {
-    margin-bottom: 10px; /* Adjust spacing */
+.create-conversation-form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.create-conversation-form input,
+.create-conversation-form button {
+    margin-bottom: 10px;
 }
 
 .toggle-button {

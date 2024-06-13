@@ -3,17 +3,41 @@ import './MainContent.css';
 import FileInput from './components/FileInput';
 import axios from 'axios';
 
-const MainContent = ({ createMessage, categories, messages, selectedConversation, setMessage, handleGenerateHelp, fetchMessages, user }) => {
+const MainContent = ({ createMessage, categories, messages, selectedConversation, handleGenerateHelp, fetchMessages, user }) => {
     const [prompt, setPrompt] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
     const [newCategory, setNewCategory] = useState('');
-    const [file, setFile] = useState(null);  // State to hold the selected file
+    const [file, setFile] = useState(null); 
+    const [fileForm, setFileForm] = useState({
+        user_id: user ? user.id : '',
+        document_type: '',
+        document_name: '',
+        document_route: '',
+        category_id: '',
+    });
+
+    useEffect(() => {
+        if(selectedConversation){
+            setFileForm({
+                ...fileForm,
+                category_id: selectedConversation.category_id,
+            });
+            setSelectedCategory(selectedConversation.category_id);
+        }
+    }, [selectedConversation])
+
 
     const handlePromptChange = (e) => setPrompt(e.target.value);
-    const handleCategoryChange = (e) => setSelectedCategory(e.target.value);
+    const handleCategoryChange = (e) => setSelectedCategory(selectedConversation.category_id);
     const handleNewCategoryChange = (e) => setNewCategory(e.target.value);
-    const handleFileChange = (file) => setFile(file.target.files[0]);  // Update the file state
-
+    const handleFileChange = (file) => {
+        setFile(file);
+        setFileForm({
+            ...fileForm,
+            document_type: file.type,
+            document_name: file.name,
+        });
+    }
     useEffect(() => {
         if (selectedConversation) {
             fetchMessages(selectedConversation.title);
@@ -25,21 +49,42 @@ const MainContent = ({ createMessage, categories, messages, selectedConversation
             alert("Please select a file first");
             return;
         }
-        console.log(file);
         const formData = new FormData();
         formData.append('file', file);
-        console.log(formData);
 
         axios.post('http://localhost:3001/chat/upload', formData)
         .then((response) => {
             console.log(response.data);
             alert('Archivo subido correctamente');
+            setFileForm({
+                ...fileForm,
+                document_route: response.data,
+            });
+            createFile(fileForm);
+            alert('File created successfully xd')
         })
         .catch((error) => {
             console.log("Error al subir el archivo", error);
             alert('Error al subir el archivo');
         });
     };
+
+    const createFile = async (fileForm) => {
+        try{
+            const response = await fetch('http://localhost:3001/documents',{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(fileForm),
+            });
+            if(response.status === 201){
+                alert('File created successfully create file');
+            }
+        }catch(error){
+            console.log(error);
+        }
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -82,20 +127,6 @@ const MainContent = ({ createMessage, categories, messages, selectedConversation
                             <FileInput 
                                 onFileChange={handleFileChange}
                                 onFileUpload={handleFileUpload}
-                            />
-                            
-                            <select value={selectedCategory} onChange={handleCategoryChange} className="category-select">
-                                <option value="">Categories</option>
-                                {categories.map((category) => (
-                                    <option key={category.id} value={category.name}>{category.name}</option>
-                                ))}
-                            </select>
-
-                            <input
-                                type="text"
-                                value={newCategory}
-                                onChange={handleNewCategoryChange}
-                                placeholder="Create a new category"
                             />
                         </div>
                         <textarea

@@ -6,11 +6,8 @@ const FileInput = ({ onFileChange, onFileUpload }) => {
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         setFileName(file ? file.name : '');
-        onFileChange(file);  // Notify parent component of the file change
-    };
-
-    const handleUploadClick = () => {
-        onFileUpload();
+        onFileChange(file);
+        console.log(file);
     };
 
     return (
@@ -22,10 +19,10 @@ const FileInput = ({ onFileChange, onFileUpload }) => {
                 onChange={handleFileChange}
             />
             <label htmlFor="file" className="file-input-label"></label>
-            {fileName && <p>File Selected: {fileName}</p>}
+            {fileName && <p>{fileName}</p>}
             <button
                 className="casino-button upload-button"
-                onClick={handleUploadClick}
+                onClick={onFileUpload}
                 disabled={!fileName}
             >
                 Upload File

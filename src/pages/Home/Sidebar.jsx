@@ -72,8 +72,7 @@ const Sidebar = ({ user, setUser, isOpen, toggleSidebar, onConversationSelect })
 
             {isOpen && (
                 <div className="sidebar-content">
-                    <Conversations conversations={conversations} onConversationSelect={onConversationSelect} />
-
+                    
                     <button onClick={() => setShowForm(true)} className="create-button">
                         Create New Conversation
                     </button>
@@ -100,6 +99,8 @@ const Sidebar = ({ user, setUser, isOpen, toggleSidebar, onConversationSelect })
                             <button type="button" onClick={() => setShowForm(false)} className="cancel-button">Cancel</button>
                         </form>
                     )}
+                    <Conversations conversations={conversations} onConversationSelect={onConversationSelect} />
+
                 </div>
             )}
 
