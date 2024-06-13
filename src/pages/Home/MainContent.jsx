@@ -16,6 +16,10 @@ const MainContent = ({ createMessage, categories, messages, selectedConversation
         category_id: '',
     });
 
+    const [voices, setVoices] = useState([]);
+    const [language, setLanguage] = useState('en');
+    const [selectedVoice, setSelectedVoice] = useState(null);
+
     useEffect(() => {
         if(selectedConversation){
             setFileForm((prevForm) => ({
@@ -25,6 +29,26 @@ const MainContent = ({ createMessage, categories, messages, selectedConversation
             setSelectedCategory(selectedConversation.category_id);
         }
     }, [selectedConversation]);
+
+    useEffect(() => {
+        const populateVoices = () => {
+            const synth = window.speechSynthesis;
+            const allVoices = synth.getVoices();
+            const filteredVoices = allVoices.filter(voice =>
+                language === 'en' ? voice.lang.startsWith('en') : voice.lang.startsWith('es')
+            );
+            setVoices(filteredVoices);
+
+            if (filteredVoices.length > 0) {
+                setSelectedVoice(filteredVoices[0].name);
+            } else {
+                setSelectedVoice(null);
+            }
+        };
+
+        populateVoices();
+        window.speechSynthesis.onvoiceschanged = populateVoices;
+    }, [language]);
 
     const handlePromptChange = (e) => setPrompt(e.target.value);
     const handleCategoryChange = (e) => setSelectedCategory(selectedConversation.category_id);
@@ -108,6 +132,20 @@ const MainContent = ({ createMessage, categories, messages, selectedConversation
         await fetchMessages(selectedConversation.title);
     };
 
+    const speakText = (text) => {
+        if (text.trim() !== '') {
+            if ('speechSynthesis' in window) {
+                const synth = window.speechSynthesis;
+                const utterance = new SpeechSynthesisUtterance(text);
+                const selectedVoiceObject = voices.find(voice => voice.name === selectedVoice);
+                utterance.voice = selectedVoiceObject;
+                synth.speak(utterance);
+            } else {
+                alert('Sorry, your browser does not support speech synthesis.');
+            }
+        }
+    };
+
     return (
         <div className="MainContent">
             {selectedConversation ? (
@@ -119,7 +157,10 @@ const MainContent = ({ createMessage, categories, messages, selectedConversation
                         {messages.map((msg, index) => (
                             <div key={index} className="Message">
                                 <div className="UserMessage">{msg.message}</div>
-                                <div className="ResponseMessage">{msg.answer}</div>
+                                <div className="ResponseMessage">
+                                    {msg.answer}
+                                    <button onClick={() => speakText(msg.answer)}>Speak</button>
+                                </div>
                             </div>
                         ))}
                     </div>
