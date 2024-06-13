@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-
 import Sidebar from './Sidebar';
 import MainContent from './MainContent';
 import './Home.css';
@@ -11,7 +10,7 @@ const Home = ({ user, setUser }) => {
     const [documents, setDocuments] = useState([]);
     const [selectedConversation, setSelectedConversation] = useState(null);
     const [message, setMessage] = useState({
-        user_id: user ? user.id : '', // Verificar si user no es null
+        user_id: user ? user.id : null, // Verificar si user no es null
         message: '',
         answer: '',
         file_id: null,
@@ -21,14 +20,16 @@ const Home = ({ user, setUser }) => {
         user_id: user ? user.id : null,
         category_id: '',
     })
-
+    console.log(documents);
+    console.log(getDoc);
     useEffect(() => {
         if (selectedConversation) {
             fetchMessages(selectedConversation.title);
             setGetDoc({
                 user_id: user.id,
                 category_id: selectedConversation.category_id,
-            })
+            });
+            fetchDocuments();
         }
     }, [selectedConversation]);
 
@@ -102,9 +103,10 @@ const Home = ({ user, setUser }) => {
         }
     };
 
-    const handleGenerateHelp = async (prompt) => {
+    const handleGenerateHelp = async ({prompt, pastMessages, pastAnswers, documents}) => {
+        console.log(prompt, pastMessages, pastAnswers, documents)
         try {
-            const res = await fetch(`http://localhost:3001/chat/context?message=${prompt}`);
+            const res = await fetch(`http://localhost:3001/chat/context?message=${prompt}?pastMessages=${pastMessages}?pastAnswers${pastAnswers}?documents=${documents}`);
             const data = await res.json();
             return data.response;
         } catch (error) {
@@ -140,6 +142,7 @@ const Home = ({ user, setUser }) => {
                 fetchMessages={fetchMessages}
                 user={user}
                 message={message}
+                documents={documents}
             />
         </div>
     );

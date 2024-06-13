@@ -3,7 +3,7 @@ import './MainContent.css';
 import FileInput from './components/FileInput';
 import axios from 'axios';
 
-const MainContent = ({ createMessage, categories, messages, selectedConversation, handleGenerateHelp, fetchMessages, user }) => {
+const MainContent = ({ createMessage, categories, messages, selectedConversation, handleGenerateHelp, fetchMessages, user, documents }) => {
     const [prompt, setPrompt] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
     const [newCategory, setNewCategory] = useState('');
@@ -18,31 +18,26 @@ const MainContent = ({ createMessage, categories, messages, selectedConversation
 
     useEffect(() => {
         if(selectedConversation){
-            setFileForm({
-                ...fileForm,
+            setFileForm((prevForm) => ({
+                ...prevForm,
                 category_id: selectedConversation.category_id,
-            });
+            }));
             setSelectedCategory(selectedConversation.category_id);
         }
-    }, [selectedConversation])
-
+    }, [selectedConversation]);
 
     const handlePromptChange = (e) => setPrompt(e.target.value);
     const handleCategoryChange = (e) => setSelectedCategory(selectedConversation.category_id);
     const handleNewCategoryChange = (e) => setNewCategory(e.target.value);
+
     const handleFileChange = (file) => {
         setFile(file);
-        setFileForm({
-            ...fileForm,
+        setFileForm((prevForm) => ({
+            ...prevForm,
             document_type: file.type,
             document_name: file.name,
-        });
-    }
-    useEffect(() => {
-        if (selectedConversation) {
-            fetchMessages(selectedConversation.title);
-        }
-    }, [selectedConversation]);
+        }));
+    };
 
     const handleFileUpload = () => {
         if (!file) {
@@ -56,12 +51,14 @@ const MainContent = ({ createMessage, categories, messages, selectedConversation
         .then((response) => {
             console.log(response.data);
             alert('Archivo subido correctamente');
-            setFileForm({
+            setFileForm((prevForm) => ({
+                ...prevForm,
+                document_route: response.data.fileUrl, // Asegúrate de que esta propiedad existe en la respuesta del backend
+            }));
+            createFile({
                 ...fileForm,
-                document_route: response.data,
+                document_route: response.data.fileUrl, // Incluye la ruta del archivo
             });
-            createFile(fileForm);
-            alert('File created successfully xd')
         })
         .catch((error) => {
             console.log("Error al subir el archivo", error);
@@ -70,8 +67,8 @@ const MainContent = ({ createMessage, categories, messages, selectedConversation
     };
 
     const createFile = async (fileForm) => {
-        try{
-            const response = await fetch('http://localhost:3001/documents',{
+        try {
+            const response = await fetch('http://localhost:3001/documents', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -79,12 +76,12 @@ const MainContent = ({ createMessage, categories, messages, selectedConversation
                 body: JSON.stringify(fileForm),
             });
             if(response.status === 201){
-                alert('File created successfully create file');
+                alert('File created successfully');
             }
-        }catch(error){
+        } catch(error) {
             console.log(error);
         }
-    }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -92,7 +89,12 @@ const MainContent = ({ createMessage, categories, messages, selectedConversation
         const currentPrompt = prompt; // Store the current prompt
         setPrompt(''); // Clear the prompt field
 
-        const answer = await handleGenerateHelp(currentPrompt);
+        const answer = await handleGenerateHelp({ 
+            prompt: currentPrompt,
+            pastMessages: messages.map((msg) => msg.message),
+            pastAnswers: messages.map((msg) => msg.answer),
+            documents: documents.map((doc) => doc.document_name) // Asumiendo que tienes documentos en el estado del componente
+        });
 
         const updatedMessage = {
             user_id: user.id,
@@ -136,7 +138,7 @@ const MainContent = ({ createMessage, categories, messages, selectedConversation
                             required
                             className="prompt-textarea"
                         />
-                        <button type="submit" className="submit-button">Submit</button>
+                        <button type="submit" className="submit-button"></button>
                     </form>
                 </>
             ) : (
