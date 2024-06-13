@@ -1,23 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import './MainContent.css';
-import FileInput from './FileInput';
+import FileInput from './components/FileInput';
+import axios from 'axios';
 
-const MainContent = ({ createMessage, categories, messages, selectedConversation, setMessage, handleGenerateHelp, fetchMessages, user, message }) => {
+const MainContent = ({ createMessage, categories, messages, selectedConversation, setMessage, handleGenerateHelp, fetchMessages, user }) => {
     const [prompt, setPrompt] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
     const [newCategory, setNewCategory] = useState('');
-    const [file, setFile] = useState(null);
+    const [file, setFile] = useState(null);  // State to hold the selected file
 
     const handlePromptChange = (e) => setPrompt(e.target.value);
     const handleCategoryChange = (e) => setSelectedCategory(e.target.value);
     const handleNewCategoryChange = (e) => setNewCategory(e.target.value);
-    const handleFileChange = (e) => setFile(e.target.files[0]);
+    const handleFileChange = (file) => setFile(file.target.files[0]);  // Update the file state
 
     useEffect(() => {
         if (selectedConversation) {
             fetchMessages(selectedConversation.title);
         }
-    }, [selectedConversation, message]); // Adding message to dependency array ensures UI updates when message changes
+    }, [selectedConversation]);
+
+    const handleFileUpload = () => {
+        if (!file) {
+            alert("Please select a file first");
+            return;
+        }
+        console.log(file);
+        const formData = new FormData();
+        formData.append('file', file);
+        console.log(formData);
+
+        axios.post('http://localhost:3001/chat/upload', formData)
+        .then((response) => {
+            console.log(response.data);
+            alert('Archivo subido correctamente');
+        })
+        .catch((error) => {
+            console.log("Error al subir el archivo", error);
+            alert('Error al subir el archivo');
+        });
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -57,7 +79,10 @@ const MainContent = ({ createMessage, categories, messages, selectedConversation
                     
                     <form onSubmit={handleSubmit} className="PromptForm">
                         <div className="form-buttons-left">
-                            <FileInput onFileChange={handleFileChange} />
+                            <FileInput 
+                                onFileChange={handleFileChange}
+                                onFileUpload={handleFileUpload}
+                            />
                             
                             <select value={selectedCategory} onChange={handleCategoryChange} className="category-select">
                                 <option value="">Categories</option>
@@ -72,7 +97,6 @@ const MainContent = ({ createMessage, categories, messages, selectedConversation
                                 onChange={handleNewCategoryChange}
                                 placeholder="Create a new category"
                             />
-
                         </div>
                         <textarea
                             value={prompt}

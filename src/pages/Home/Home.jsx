@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import axios from "axios";
+
 import Sidebar from './Sidebar';
 import MainContent from './MainContent';
 import './Home.css';
@@ -9,7 +11,7 @@ const Home = ({ user, setUser }) => {
     const [messages, setMessages] = useState([]);
     const [selectedConversation, setSelectedConversation] = useState(null);
     const [message, setMessage] = useState({
-        user_id: user.id,
+        user_id: user ? user.id : '', // Verificar si user no es null
         message: '',
         answer: '',
         file_id: null,
@@ -21,6 +23,23 @@ const Home = ({ user, setUser }) => {
             fetchMessages(selectedConversation.title);
         }
     }, [selectedConversation]);
+
+    const [conversations, setConversations] = useState([]); // Example fetch function to populate conversations 
+    const fetchConversations = async () => {
+        if (user) { // Verificar si user no es null
+            try {
+                const response = await fetch(`http://localhost:3001/conversations/${user.id}`);
+                const data = await response.json();
+                setConversations(data);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    };
+
+    useEffect(() => {
+        fetchConversations();
+    }, [user]);
 
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
@@ -79,6 +98,7 @@ const Home = ({ user, setUser }) => {
                 isOpen={isSidebarOpen}
                 toggleSidebar={toggleSidebar}
                 onConversationSelect={handleConversationSelect}
+                conversations={conversations}
             />
             <MainContent
                 createMessage={createMessage}

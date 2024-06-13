@@ -3,19 +3,18 @@ import React, { useEffect, useState } from 'react';
 import './Sidebar.css';
 import Conversations from './components/Conversations';
 
-const Sidebar = ({ user, setUser, isOpen, toggleSidebar, onConversationSelect}) => {
-
+const Sidebar = ({ user, setUser, isOpen, toggleSidebar, onConversationSelect }) => {
     const navigate = useNavigate();
     const [showForm, setShowForm] = useState(false);
     const [conversation, setConversation] = useState({
-        user_id: user.id,
+        user_id: user ? user.id : '', // Verificar si user no es null
         title: '',
         category_id: '',
     });
     const [conversations, setConversations] = useState([]);
 
     const handleConversationChange = (e) => {
-        const {name, value} = e.target;
+        const { name, value } = e.target;
         setConversation({ ...conversation, [name]: value });
     }
 
@@ -25,12 +24,14 @@ const Sidebar = ({ user, setUser, isOpen, toggleSidebar, onConversationSelect}) 
     };
 
     const fetchConversations = async () => {
-        try {
-            const res = await fetch(`http://localhost:3001/conversations/${user.id}`);
-            const data = await res.json();
-            setConversations(data);
-        } catch (error) {
-            console.log(error);
+        if (user) { // Verificar si user no es null
+            try {
+                const res = await fetch(`http://localhost:3001/conversations/${user.id}`);
+                const data = await res.json();
+                setConversations(data);
+            } catch (error) {
+                console.log(error);
+            }
         }
     };
 
@@ -59,24 +60,23 @@ const Sidebar = ({ user, setUser, isOpen, toggleSidebar, onConversationSelect}) 
     };
 
     useEffect(() => {
-        if (user) {
-            fetchConversations();
-        }
+        fetchConversations();
     }, [user]);
 
     return (
         <div className={`sidebar ${isOpen ? 'open' : ''}`}>
             <div className="sidebar-header">
-                <h2>{user.name}</h2>
-                <h2>{user.email}</h2>
+                <h2>{user ? user.name : 'Guest'}</h2>
             </div>
             <button onClick={handleLogout} className="logout-button">Logout</button>
 
             {isOpen && (
                 <div className="sidebar-content">
-                    <Conversations conversations={conversations} onConversationSelect={onConversationSelect}/>
+                    <Conversations conversations={conversations} onConversationSelect={onConversationSelect} />
 
-                    <button onClick={() => setShowForm(true)} className="create-button">Create New Conversation</button>
+                    <button onClick={() => setShowForm(true)} className="create-button">
+                        Create New Conversation
+                    </button>
 
                     {showForm && (
                         <form onSubmit={createConversation} className="create-conversation-form">
@@ -89,15 +89,15 @@ const Sidebar = ({ user, setUser, isOpen, toggleSidebar, onConversationSelect}) 
                                 required
                             />
                             <input
-                                name = "category_id"
+                                name="category_id"
                                 type="text"
                                 placeholder="Category"
                                 value={conversation.category_id}
                                 onChange={handleConversationChange}
                                 required
                             />
-                            <button type="submit">Create</button>
-                            <button type="button" onClick={() => setShowForm(false)}>Cancel</button>
+                            <button type="submit" className="create-button">Create</button>
+                            <button type="button" onClick={() => setShowForm(false)} className="cancel-button">Cancel</button>
                         </form>
                     )}
                 </div>
