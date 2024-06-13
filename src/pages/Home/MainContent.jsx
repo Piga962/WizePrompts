@@ -7,7 +7,7 @@ const MainContent = ({ createMessage, categories, messages, selectedConversation
     const [prompt, setPrompt] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
     const [newCategory, setNewCategory] = useState('');
-    const [file, setFile] = useState(null); 
+    const [file, setFile] = useState(null);
     const [fileForm, setFileForm] = useState({
         user_id: user ? user.id : '',
         document_type: '',
@@ -15,13 +15,13 @@ const MainContent = ({ createMessage, categories, messages, selectedConversation
         document_route: '',
         category_id: '',
     });
-
+    const [text, setText] = useState('');
     const [voices, setVoices] = useState([]);
     const [language, setLanguage] = useState('en');
     const [selectedVoice, setSelectedVoice] = useState(null);
 
     useEffect(() => {
-        if(selectedConversation){
+        if (selectedConversation) {
             setFileForm((prevForm) => ({
                 ...prevForm,
                 category_id: selectedConversation.category_id,
@@ -72,22 +72,22 @@ const MainContent = ({ createMessage, categories, messages, selectedConversation
         formData.append('file', file);
 
         axios.post('http://localhost:3001/chat/upload', formData)
-        .then((response) => {
-            console.log(response.data);
-            alert('Archivo subido correctamente');
-            setFileForm((prevForm) => ({
-                ...prevForm,
-                document_route: response.data.fileUrl, // Asegúrate de que esta propiedad existe en la respuesta del backend
-            }));
-            createFile({
-                ...fileForm,
-                document_route: response.data.fileUrl, // Incluye la ruta del archivo
+            .then((response) => {
+                console.log(response.data);
+                alert('Archivo subido correctamente');
+                setFileForm((prevForm) => ({
+                    ...prevForm,
+                    document_route: response.data.fileUrl, // Asegúrate de que esta propiedad existe en la respuesta del backend
+                }));
+                createFile({
+                    ...fileForm,
+                    document_route: response.data.fileUrl, // Incluye la ruta del archivo
+                });
+            })
+            .catch((error) => {
+                console.log("Error al subir el archivo", error);
+                alert('Error al subir el archivo');
             });
-        })
-        .catch((error) => {
-            console.log("Error al subir el archivo", error);
-            alert('Error al subir el archivo');
-        });
     };
 
     const createFile = async (fileForm) => {
@@ -99,10 +99,10 @@ const MainContent = ({ createMessage, categories, messages, selectedConversation
                 },
                 body: JSON.stringify(fileForm),
             });
-            if(response.status === 201){
+            if (response.status === 201) {
                 alert('File created successfully');
             }
-        } catch(error) {
+        } catch (error) {
             console.log(error);
         }
     };
@@ -113,7 +113,7 @@ const MainContent = ({ createMessage, categories, messages, selectedConversation
         const currentPrompt = prompt; // Store the current prompt
         setPrompt(''); // Clear the prompt field
 
-        const answer = await handleGenerateHelp({ 
+        const answer = await handleGenerateHelp({
             prompt: currentPrompt,
             pastMessages: messages.map((msg) => msg.message),
             pastAnswers: messages.map((msg) => msg.answer),
@@ -132,7 +132,19 @@ const MainContent = ({ createMessage, categories, messages, selectedConversation
         await fetchMessages(selectedConversation.title);
     };
 
-    const speakText = (text) => {
+    const handleTextChange = (event) => {
+        setText(event.target.value);
+    };
+
+    const handleVoiceChange = (event) => {
+        setSelectedVoice(event.target.value);
+    };
+
+    const handleLanguageChange = (lang) => {
+        setLanguage(lang);
+    };
+
+    const handleClick = () => {
         if (text.trim() !== '') {
             if ('speechSynthesis' in window) {
                 const synth = window.speechSynthesis;
@@ -157,17 +169,14 @@ const MainContent = ({ createMessage, categories, messages, selectedConversation
                         {messages.map((msg, index) => (
                             <div key={index} className="Message">
                                 <div className="UserMessage">{msg.message}</div>
-                                <div className="ResponseMessage">
-                                    {msg.answer}
-                                    <button onClick={() => speakText(msg.answer)}>Speak</button>
-                                </div>
+                                <div className="ResponseMessage">{msg.answer}</div>
                             </div>
                         ))}
                     </div>
-                    
+
                     <form onSubmit={handleSubmit} className="PromptForm">
                         <div className="form-buttons-left">
-                            <FileInput 
+                            <FileInput
                                 onFileChange={handleFileChange}
                                 onFileUpload={handleFileUpload}
                             />
@@ -181,6 +190,40 @@ const MainContent = ({ createMessage, categories, messages, selectedConversation
                         />
                         <button type="submit" className="submit-button"></button>
                     </form>
+
+                    <div className='TextToSpeech'>
+                        <h1>Text-to-Speech</h1>
+                        <div className="language-buttons">
+                            <button
+                                className={language === 'en' ? 'active' : ''}
+                                onClick={() => handleLanguageChange('en')}
+                            >
+                                English
+                            </button>
+                            <button
+                                className={language === 'es' ? 'active' : ''}
+                                onClick={() => handleLanguageChange('es')}
+                            >
+                                Spanish
+                            </button>
+                        </div>
+
+                        <textarea
+                            placeholder='Enter text...'
+                            value={text}
+                            onChange={handleTextChange}
+                        ></textarea>
+
+                        <select onChange={handleVoiceChange} value={selectedVoice}>
+                            {voices.map((voice, index) => (
+                                <option key={index} value={voice.name}>
+                                    {voice.name} ({voice.lang})
+                                </option>
+                            ))}
+                        </select>
+
+                        <button onClick={handleClick}>Speak</button>
+                    </div>
                 </>
             ) : (
                 <div className="NoConversationSelected">
