@@ -53,7 +53,7 @@ const Form = () =>{
         <div className="Register-container">
         <div className="Register-Heading">
             <button className="Home-button" onClick={() => navigate("/")}>
-                <img src={logo} alt="logo"/>
+                <img src={logo} alt="logo" className="logo"/>
             </button>
             <h1>Register</h1>
         </div>

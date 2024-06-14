@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import './MainContent.css';
 import FileInput from './components/FileInput';
 import axios from 'axios';
+import FormattedText from './components/FormattedText';
+import Send from '../../images/send.png';
+import Audio from '../../images/audio.png';
 
 const MainContent = ({ createMessage, categories, messages, selectedConversation, handleGenerateHelp, fetchMessages, user, documents }) => {
     const [prompt, setPrompt] = useState('');
@@ -16,6 +19,10 @@ const MainContent = ({ createMessage, categories, messages, selectedConversation
         category_id: '',
     });
 
+    const [voices, setVoices] = useState([]);
+    const [language, setLanguage] = useState('en');
+    const [selectedVoice, setSelectedVoice] = useState(null);
+
     useEffect(() => {
         if(selectedConversation){
             setFileForm((prevForm) => ({
@@ -25,6 +32,26 @@ const MainContent = ({ createMessage, categories, messages, selectedConversation
             setSelectedCategory(selectedConversation.category_id);
         }
     }, [selectedConversation]);
+
+    useEffect(() => {
+        const populateVoices = () => {
+            const synth = window.speechSynthesis;
+            const allVoices = synth.getVoices();
+            const filteredVoices = allVoices.filter(voice =>
+                language === 'en' ? voice.lang.startsWith('en') : voice.lang.startsWith('es')
+            );
+            setVoices(filteredVoices);
+
+            if (filteredVoices.length > 0) {
+                setSelectedVoice(filteredVoices[0].name);
+            } else {
+                setSelectedVoice(null);
+            }
+        };
+
+        populateVoices();
+        window.speechSynthesis.onvoiceschanged = populateVoices;
+    }, [language]);
 
     const handlePromptChange = (e) => setPrompt(e.target.value);
     const handleCategoryChange = (e) => setSelectedCategory(selectedConversation.category_id);
@@ -49,7 +76,8 @@ const MainContent = ({ createMessage, categories, messages, selectedConversation
 
         axios.post('http://localhost:3001/chat/upload', formData)
         .then((response) => {
-            console.log(response.data);
+            console.log(response);
+            console.log(formData);  
             alert('Archivo subido correctamente');
             setFileForm((prevForm) => ({
                 ...prevForm,
@@ -108,18 +136,35 @@ const MainContent = ({ createMessage, categories, messages, selectedConversation
         await fetchMessages(selectedConversation.title);
     };
 
+    const speakText = (text) => {
+        if (text.trim() !== '') {
+            if ('speechSynthesis' in window) {
+                const synth = window.speechSynthesis;
+                const utterance = new SpeechSynthesisUtterance(text);
+                const selectedVoiceObject = voices.find(voice => voice.name === selectedVoice);
+                utterance.voice = selectedVoiceObject;
+                synth.speak(utterance);
+            } else {
+                alert('Sorry, your browser does not support speech synthesis.');
+            }
+        }
+    };
+
     return (
         <div className="MainContent">
             {selectedConversation ? (
                 <>
-                    <div className="ConversationTitle">
-                        <h2>{selectedConversation.title}</h2>
-                    </div>
+
                     <div className="Messages">
+                    <h2 style={{display: 'flex', justifyContent: 'center', color: 'white'}}>{selectedConversation.title}</h2>
                         {messages.map((msg, index) => (
                             <div key={index} className="Message">
                                 <div className="UserMessage">{msg.message}</div>
-                                <div className="ResponseMessage">{msg.answer}</div>
+                                <FormattedText className="ResponseMessage" text={msg.answer}>
+                                </FormattedText>
+                                    <button onClick={() => speakText(msg.answer)} style={{width: '50px', height: '50px', borderRadius: '100%'}}>
+                                        <img src={Audio} alt="Audio" className='send' />
+                                    </button>
                             </div>
                         ))}
                     </div>
@@ -138,7 +183,9 @@ const MainContent = ({ createMessage, categories, messages, selectedConversation
                             required
                             className="prompt-textarea"
                         />
-                        <button type="submit" className="submit-button"></button>
+                        <button type="submit" className="submit-button">
+                            <img src={Send} alt="Send" className='send' />
+                        </button>
                     </form>
                 </>
             ) : (

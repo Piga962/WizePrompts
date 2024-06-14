@@ -61,6 +61,7 @@ const Home = ({ user, setUser }) => {
             const response = await fetch(`http://localhost:3001/messages/${conversationTitle}`);
             const data = await response.json();
             setMessages(data);
+            fetchDocuments();
         } catch (error) {
             console.log(error);
         }
@@ -76,8 +77,10 @@ const Home = ({ user, setUser }) => {
                 body: JSON.stringify(getDoc),
             }
             );
+            console.log(response);
             if(response.status === 200){
                 const data = await response.json();
+                console.log(data);
                 setDocuments(data);
             }
         }catch(error){
@@ -97,6 +100,7 @@ const Home = ({ user, setUser }) => {
             if (response.status === 201) {
                 alert('Message created successfully');
                 fetchMessages(newMessage.conversation_id);
+                fetchDocuments();
             }
         } catch (error) {
             console.log(error);
@@ -143,6 +147,7 @@ const Home = ({ user, setUser }) => {
                 user={user}
                 message={message}
                 documents={documents}
+                fetchDocuments={fetchDocuments}
             />
         </div>
     );

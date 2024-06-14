@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from 'react';
 import './Sidebar.css';
 import Conversations from './components/Conversations';
+import WizelineLogo from '../../images/wizeline-sin-fondo.png';
 
 const Sidebar = ({ user, setUser, isOpen, toggleSidebar, onConversationSelect }) => {
     const navigate = useNavigate();
@@ -66,7 +67,7 @@ const Sidebar = ({ user, setUser, isOpen, toggleSidebar, onConversationSelect })
     return (
         <div className={`sidebar ${isOpen ? 'open' : ''}`}>
             <div className="sidebar-header">
-                <h2>{user ? user.name : 'Guest'}</h2>
+                <img src={WizelineLogo} alt="logo" className="wizeline-logo"/><h2 style={{overflow: 'hidden', textWrap: 'balance'}}> {user ? user.name : 'Guest'}</h2>
             </div>
             <button onClick={handleLogout} className="logout-button">Logout</button>
 

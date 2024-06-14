@@ -12,6 +12,7 @@
     background-color: #3a3f47; /* Slightly lighter background for the form */
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
 }
 
 /* Styling for the header section of the register form */
@@ -100,4 +101,9 @@ span {
 
 .Register-button:hover {
     background-color: #d42e34; /* Slightly darker shade on hover */
+}
+
+.logo {
+    width: 120px;
+    height: 120px;
 }

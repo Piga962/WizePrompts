@@ -2,9 +2,9 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 250px;
+    width: 225px;
     height: 100%;
-    background-color: #333;
+    background-color: #171717;
     color: white;
     transition: transform 0.3s ease;
     transform: translateX(-100%);
@@ -21,7 +21,7 @@
 .sidebar-header {
     display: flex;
     justify-content: center;
-    width: 100%;
+    width: 60%;
     align-items: center;
     margin-bottom: 20px;
 }
@@ -77,15 +77,24 @@
 .toggle-button {
     position: absolute;
     top: 20px;
-    right: -30px; /* Position it outside the sidebar */
+    right: -60px; /* Position it outside the sidebar */
     background: none;
     border: none;
     color: white;
     cursor: pointer;
-    font-size: 20px;
+    font-size: 35px;
     transition: right 0.3s ease;
 }
 
 .toggle-button.open {
-    right: -50px; /* Adjust this value if necessary */
+    right: 10px; /* Adjust this value if necessary */
+    top: 10px; /* Adjust this value if necessary */
+}
+
+.wizeline-logo {
+    width: 70px;
+    margin-bottom: 20px;
+    position: absolute;
+    left: 5px;
+    top: -8px;
 }

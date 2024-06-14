@@ -1,6 +1,8 @@
 /* Home.css */
 .Home {
     display: flex;
+    height: 710px;
+    background-color: #333333;
 }
 
 .main-content {

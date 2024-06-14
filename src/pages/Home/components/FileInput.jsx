@@ -18,7 +18,7 @@ const FileInput = ({ onFileChange, onFileUpload }) => {
                 className="file-input" 
                 onChange={handleFileChange}
             />
-            <label htmlFor="file" className="file-input-label"></label>
+            <label htmlFor="file" className="file-input-label">Select File</label>
             {fileName && <p>{fileName}</p>}
             <button
                 className="casino-button upload-button"

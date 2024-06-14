@@ -2,6 +2,7 @@
 import { cleanText } from './textCleaner';
 
 export const formatText = (text) => {
+    
     // Clean the text first
     const cleanedText = cleanText(text);
 
